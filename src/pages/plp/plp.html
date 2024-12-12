@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing Page</title>
+    <link rel="stylesheet" href="plp_styles.css">
+</head>
+<body>
+    <header>
+        <h1>Product Listing Page</h1>
+    </header>
+    <div class="container">
+        <!-- Search bar for searching products by name/keyword -->
+        <div>
+            <input type="text" id="searchBar" placeholder="Search products..." />
+        </div>
+        <div>
+            <label for="filterCategory">Filter by Category:</label>
+            <select id="filterCategory">
+                <option value="">All Categories</option>
+            </select>
+            <label for="filterPrice">Filter by Price:</label>
+            <select id="filterPrice">
+                <option value="">All Prices</option>
+            </select>
+        </div>
+        <div>
+            <label for="sortCategory">Sort by Category:</label>
+            <select id="sortCategory">
+                <option value="category">Category</option>
+            </select>
+            <label for="sortPrice">Sort by Price:</label>
+            <select id="sortPrice">
+                <option value="priceLowToHigh">Price: Low to High</option>
+                <option value="priceHighToLow">Price: High to Low</option>
+            </select>
+        </div>
+
+        <button id="loadMoreButton">Load More</button>
+
+        <div class="product-grid" id="productGrid">
+            <!-- Products will be dynamically inserted here -->
+        </div>
+    </div>
+    <script src="filter_logic.js"></script>
+    <script src="sort_logic.js"></script>
+    <script src="plp_script.js"></script>
+
+ 
+
+</body>
+</html>
