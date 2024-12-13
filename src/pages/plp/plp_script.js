@@ -74,6 +74,8 @@ fetch('https://fakestoreapi.com/products')
     .then(data => {
         let products = data; // Keep track of the original data
         let filteredProducts = [...products]; // Initialize filtered products
+        let currentIndex = 0; // To track how many items are displayed
+        const itemsPerPage = 10; // Number of items to show initially or on load more
 
         // Show shimmer while waiting for data
         showShimmer();
@@ -84,40 +86,49 @@ fetch('https://fakestoreapi.com/products')
 
         // Simulate a delay (for the shimmer effect) and then render products
         setTimeout(() => {
-            // Render the products initially
-            renderProducts(filteredProducts);
+            // Render the first set of products
+            const initialProducts = filteredProducts.slice(0, itemsPerPage);
+            currentIndex = itemsPerPage;
+            renderProducts(initialProducts);
             hideShimmer(); // Hide shimmer once products are rendered
 
-            // Event listeners for filter and sort
+            // Add Load More button functionality
+            const loadMoreButton = document.getElementById('loadMoreButton');
+            loadMoreButton.addEventListener('click', () => {
+                const nextProducts = filteredProducts.slice(currentIndex, currentIndex + itemsPerPage);
+                renderProducts(nextProducts, true); // Append new products
+                currentIndex += itemsPerPage;
+
+                // Hide the Load More button if all products are loaded
+                if (currentIndex >= filteredProducts.length) {
+                    loadMoreButton.style.display = 'none';
+                }
+            });
+
+            // Event listeners for filters and search
             document.getElementById('filterCategory').addEventListener('change', (e) => {
                 filteredProducts = filterProducts(e, products);
-                renderProducts(filteredProducts); // Re-render after filtering
+                currentIndex = 0;
+                loadMoreButton.style.display = 'block'; // Show Load More button
+                renderProducts(filteredProducts.slice(0, itemsPerPage));
+                currentIndex = itemsPerPage;
             });
 
             document.getElementById('filterPrice').addEventListener('change', (e) => {
                 filteredProducts = filterProducts(e, products);
-                renderProducts(filteredProducts); // Re-render after filtering
+                currentIndex = 0;
+                loadMoreButton.style.display = 'block'; // Show Load More button
+                renderProducts(filteredProducts.slice(0, itemsPerPage));
+                currentIndex = itemsPerPage;
             });
 
-            document.getElementById('sortCategory').addEventListener('change', (e) => {
-                filteredProducts = sortProducts(e, filteredProducts); // Use filtered products for sorting
-                renderProducts(filteredProducts); // Re-render after sorting
-            });
-
-            document.getElementById('sortPrice').addEventListener('change', (e) => {
-                filteredProducts = sortProducts(e, filteredProducts); // Use filtered products for sorting
-                renderProducts(filteredProducts); // Re-render after sorting
-            });
-
-            // Event listener for search bar
             document.getElementById('searchBar').addEventListener('input', (e) => {
                 const searchQuery = e.target.value;
-                filteredProducts = searchProducts(searchQuery, products); // Filter based on search query
-                filteredProducts = filterProducts({ target: document.getElementById('filterCategory') }, filteredProducts); // Apply category filter after search
-                filteredProducts = filterProducts({ target: document.getElementById('filterPrice') }, filteredProducts); // Apply price filter after search
-                filteredProducts = sortProducts({ target: document.getElementById('sortCategory') }, filteredProducts); // Apply category sort after search
-                filteredProducts = sortProducts({ target: document.getElementById('sortPrice') }, filteredProducts); // Apply price sort after search
-                renderProducts(filteredProducts); // Re-render after searching
+                filteredProducts = searchProducts(searchQuery, products);
+                currentIndex = 0;
+                loadMoreButton.style.display = 'block'; // Show Load More button
+                renderProducts(filteredProducts.slice(0, itemsPerPage));
+                currentIndex = itemsPerPage;
             });
 
         }, 1000); // Simulate a delay of 1 second (for shimmer effect)
